@@ -66,4 +66,26 @@ export class TransactionService {
       });
     });
   }
+
+  async getUserTransactions(userId: number) {
+    const transactionsAsSender = await this.prisma.transaction.findMany({
+      where: { senderId: userId },
+      include: {
+        sender: true,
+        receiver: true,
+        category: true,
+      },
+    });
+
+    const transactionsAsReceiver = await this.prisma.transaction.findMany({
+      where: { receiverId: userId },
+      include: {
+        sender: true,
+        receiver: true,
+        category: true,
+      },
+    });
+
+    return [...transactionsAsSender, ...transactionsAsReceiver];
+  }
 }

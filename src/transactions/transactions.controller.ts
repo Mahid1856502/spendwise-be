@@ -1,5 +1,13 @@
 // src/transaction/transaction.controller.ts
-import { Controller, Post, Body, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UseGuards,
+  Get,
+  Param,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { ApiBearerAuth, ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
@@ -16,5 +24,10 @@ export class TransactionController {
   @ApiCreatedResponse({ description: 'Transaction successfully created.' })
   async createTransaction(@Body() createTransactionDto: CreateTransactionDto) {
     return this.transactionService.createTransaction(createTransactionDto);
+  }
+
+  @Get('user/:id')
+  async getUserTransactions(@Param('id', ParseIntPipe) id: number) {
+    return this.transactionService.getUserTransactions(+id);
   }
 }
